@@ -8,4 +8,11 @@ def load_california_housing():
 
 data=load_california_housing()
 
+#Explore the data
+print(data.head())
+print(data.info())
+print(data.describe())
+print(data.isnull().sum())
+print(data.dtypes)
+
 data.to_csv('california_housing.csv', index=False)  # Save the DataFrame to a CSV file
