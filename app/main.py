@@ -36,3 +36,12 @@ def get_model_info():
             "avg_error":"$25,602"
             }
 
+@app.get("/health")
+def health_check():
+    return {"status": "Healthy",
+            "version": "1.0.0",
+            "model":"Random Forest Regressor",
+            "features": features,
+            "target_variable": "Median House Value",
+            "avg_error":"$25,602"}
+
