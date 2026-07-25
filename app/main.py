@@ -25,4 +25,14 @@ def home():
 def get_features():
     return {"features": features}
 
+@app.get("/model-info")
+def get_model_info():
+    return {
+            "model": "Random Forest Regressor",
+            "version": "1.0",
+            "dataset": "California Housing Dataset",
+            "features": features,
+            "target_variable": "Median House Value",
+            "avg_error":"$25,602"
+            }
 
