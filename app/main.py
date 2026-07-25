@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 from fastapi import FastAPI,HTTPException,UploadFile,File
 from fastapi.responses import StreamingResponse
-
+from app.schemas import HouseData
 
 app = FastAPI(
     title="House Price Prediction API",
@@ -13,8 +13,6 @@ app = FastAPI(
 model = joblib.load('../model/house_model.joblib')
 features = joblib.load('../model/house_features.joblib')
 
-from app.schemas import HouseData
-
 @app.get("/")
 def home():
     return {"message": "Welcome to the House Price Prediction API!",
@@ -22,4 +20,9 @@ def home():
             "version": "1.0.0",
             "endpoints": "Send post request to /predict : POST endpoint to predict house prices based on input features"
             }
+
+@app.get("/features")
+def get_features():
+    return {"features": features}
+
 
