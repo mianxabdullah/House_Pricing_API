@@ -45,3 +45,14 @@ def health_check():
             "target_variable": "Median House Value",
             "avg_error":"$25,602"}
 
+@app.post("/predict")
+def predict_house_price(house: HouseData):
+
+        input_data = pd.DataFrame([house.model_dump()]) # Convert the input data to a pandas DataFrame
+        prediction = model.predict(input_data)
+        price_usd = prediction[0] * 100000  # Convert to USD
+        return {"predicted_price": f"${price_usd:,.0f}",
+                "predicted_price_short": f"{prediction[0]:,.2f} hundred thousands $",
+                "estimation_range":f"{price_usd - 25602:,.0f} to ${price_usd + 25602:,.0f}"}   
+
+
