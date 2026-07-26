@@ -75,6 +75,13 @@ async def predict_house_price_file(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, 
                                 detail="CSV file is empty. Please upload a valid CSV file with data.")
 
+        if not all(feature in df.columns for feature in features):
+            missing_features = [feature for feature in features if feature not in df.columns]
+            raise HTTPException(
+                                status_code=400, 
+                                detail={"message":f"CSV file must contain the following columns: {features}",
+                                        "missing_features": missing_features})
+        
     except Exception as e:
         raise HTTPException(status_code=500, 
                             detail=f"Prediction failed: {str(e)}")
