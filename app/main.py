@@ -48,7 +48,7 @@ def health_check():
 @app.post("/predict")
 def predict_house_price(house: HouseData):
     try:
-        
+
         input_data = pd.DataFrame([house.model_dump()]) # Convert the input data to a pandas DataFrame
         prediction = model.predict(input_data)
         price_usd = prediction[0] * 100000  # Convert to USD
@@ -59,4 +59,13 @@ def predict_house_price(house: HouseData):
     except Exception as e:
         raise HTTPException(status_code=500, 
                             detail=f"Prediction failed: {str(e)}")
+
+@app.post("/predict_file")
+async def predict_house_price_file(file: UploadFile = File(...)):
+
+    if not file.filename.lower().endswith('.csv'):
+        raise HTTPException(status_code=400, 
+                            detail="Invalid file format. Please upload a CSV file.")
+
+
 
