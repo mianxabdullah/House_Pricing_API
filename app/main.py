@@ -81,7 +81,14 @@ async def predict_house_price_file(file: UploadFile = File(...)):
                                 status_code=400, 
                                 detail={"message":f"CSV file must contain the following columns: {features}",
                                         "missing_features": missing_features})
-        
+        predictions = model.predict(df[features])
+        df['PredictedPrice'] = predictions * 100000  # Convert to USD
+        df['PredictedPrice'] = df['PredictedPrice'].apply(lambda x: f"{x:,.0f}")
+        output = io.StringIO() # Use StringIO for text data
+        df.to_csv(output, index=False) # Write the DataFrame to the StringIO object
+        output.seek(0) # Move the cursor to the beginning of the StringIO object so that it can be read from the start
+        return StreamingResponse(output, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=predictions.csv"})
+    
     except Exception as e:
         raise HTTPException(status_code=500, 
                             detail=f"Prediction failed: {str(e)}")
