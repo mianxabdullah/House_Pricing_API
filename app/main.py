@@ -66,6 +66,17 @@ async def predict_house_price_file(file: UploadFile = File(...)):
     if not file.filename.lower().endswith('.csv'):
         raise HTTPException(status_code=400, 
                             detail="Invalid file format. Please upload a CSV file.")
+        
+    try:
+                
+        df = pd.read_csv(file.file)
 
+        if df.empty:
+            raise HTTPException(status_code=400, 
+                                detail="CSV file is empty. Please upload a valid CSV file with data.")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, 
+                            detail=f"Prediction failed: {str(e)}")
 
 
